@@ -4,6 +4,14 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
+val TYPE_COUNTRY = 0
+val TYPE_AD = 1
+
+open class ListItem(val type: Int){
+
+}
+
+
 data class Country(
         @SerializedName("name")
         val countryName: String?,
@@ -18,7 +26,7 @@ data class Country(
         @SerializedName("region")
         val region:String?
 
-):Parcelable {
+):ListItem(TYPE_COUNTRY), Parcelable {
         constructor(parcel: Parcel) : this(
                 parcel.readString(),
                 parcel.readString(),
@@ -52,3 +60,5 @@ data class Country(
                 }
         }
 }
+
+   class BannerAd:ListItem(TYPE_AD)

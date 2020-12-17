@@ -3,22 +3,22 @@ package apps.paprika.monetizar.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import apps.paprika.monetizar.R
 import apps.paprika.monetizar.adapter.CountryClickListener
 import apps.paprika.monetizar.adapter.CountryListAdapter
+import apps.paprika.monetizar.model.BannerAd
 import apps.paprika.monetizar.model.Country
+import apps.paprika.monetizar.model.ListItem
 import apps.paprika.monetizar.presenter.CountriesPresenter
 import com.google.android.material.button.MaterialButton
 
 class MainActivity : AppCompatActivity(), CountryClickListener, CountriesPresenter.View {
 
-    private val countriesList = arrayListOf<Country>()
+    private val countriesList = arrayListOf<ListItem>()
     private val countriesAdapter = CountryListAdapter(arrayListOf(), this)
 
 
@@ -54,8 +54,26 @@ class MainActivity : AppCompatActivity(), CountryClickListener, CountriesPresent
     }
 
     override fun setCountries(countries: List<Country>) {
+
+
         countriesList.clear()
-        countries?.let { countriesList.addAll(it) }
+
+        var i = 0
+        countries?.let {
+
+            for (country in countries){
+
+
+                 i++
+                if (i % 5 == 0){
+                    countriesList.add(BannerAd())
+                }
+                    countriesList.add(country)
+
+
+
+            }
+            }
         countriesAdapter.updateCountries(countriesList)
 
         retryButton.visibility = View.GONE

@@ -10,20 +10,22 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import apps.paprika.monetizar.R
 import apps.paprika.monetizar.model.Country
+import apps.paprika.monetizar.model.ListItem
 import apps.paprika.monetizar.util.getProgressDrawable
 import apps.paprika.monetizar.util.loadImage
 
 
-class CountryListAdapter(var countries: ArrayList<Country>, val clickListener: CountryClickListener):
+class CountryListAdapter(var countries: ArrayList<ListItem>, val clickListener: CountryClickListener):
         RecyclerView.Adapter<CountryListAdapter.CountryViewHolder>(){
 
-    fun updateCountries(newCountries:ArrayList<Country>){
+    fun updateCountries(newCountries:ArrayList<ListItem>){
         countries.clear()
         countries.addAll(newCountries)
         notifyDataSetChanged()
 
     }
 
+    override fun getItemViewType(position: Int) = countries[position].type
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -37,14 +39,23 @@ class CountryListAdapter(var countries: ArrayList<Country>, val clickListener: C
     override fun onBindViewHolder(holder: CountryViewHolder, position: Int) {
       holder.bind(countries[position])
     }
-    class CountryViewHolder(view:View, var clickListener: CountryClickListener): RecyclerView.ViewHolder(view){
+
+    abstract class CountryListViewHolder(view: View): RecyclerView.ViewHolder(view){
+        abstract fun bind(item: ListItem)
+    }
+
+
+    class CountryViewHolder(view:View, var clickListener: CountryClickListener): CountryListViewHolder(view){
 
         private val layout:LinearLayout = itemView.findViewById(R.id.layout)
         private val imagen:ImageView = itemView.findViewById(R.id.imageViewjaja)
         private val nombre:TextView = itemView.findViewById(R.id.name)
         private val capital:TextView = itemView.findViewById(R.id.capital)
 
-        fun bind(country: Country){
+        override fun bind(item: ListItem){
+
+            val country = item as Country
+
             nombre.text = country.countryName
             capital.text = country.capital
             imagen.loadImage(country.flag, getProgressDrawable(imagen.context))
@@ -53,5 +64,10 @@ class CountryListAdapter(var countries: ArrayList<Country>, val clickListener: C
 
     }
 
+    class adViewHolder(view: View):CountryListViewHolder(view){
+        override fun bind(item: ListItem) {
+            TODO("Not yet implemented")
+        }
+    }
 
 }
